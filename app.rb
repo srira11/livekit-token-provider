@@ -28,3 +28,7 @@ get "/api/token" do
   token.attributes = { "mykey" => "myvalue" }
   { accessToken: token.to_jwt }.to_json
 end
+
+get "/healthcheck" do
+  "OK"
+end
