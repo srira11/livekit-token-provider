@@ -28,8 +28,10 @@ get "/api/token" do
   content_type :json
   token = LiveKit::AccessToken.new(api_key: LIVEKIT_API_KEY, api_secret: LIVEKIT_API_SECRET)
   token.identity = params["identity"]
-  token.name = params["roomName"]
-  token.video_grant = LiveKit::VideoGrant.new(roomJoin: true, room: 'room-name')
+  token.name = "user"
+  token.video_grant = LiveKit::VideoGrant.new(roomJoin: true, room: params["roomName"],
+                                              canPublish: true, canPublishData: true,
+                                              canSubscribe: true)
   token.attributes = { "mykey" => "myvalue" }
   { accessToken: token.to_jwt }.to_json
 end
