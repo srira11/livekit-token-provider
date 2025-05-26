@@ -2,6 +2,7 @@
 require 'sinatra'
 require 'json'
 require 'livekit'
+require 'rack/cors'
 
 # Load environment variables
 require 'dotenv/load'
@@ -11,10 +12,14 @@ LIVEKIT_API_KEY = ENV['LIVEKIT_API_KEY']
 LIVEKIT_API_SECRET = ENV['LIVEKIT_API_SECRET']
 ALLOWED_ORIGINS = ENV['ALLOWED_ORIGINS']
 
-before do
-  response.headers['Access-Control-Allow-Origin'] = ALLOWED_ORIGINS
-  response.headers['Access-Control-Allow-Methods'] = 'GET'
-  response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+use Rack::Cors do
+  allow do
+    origins ALLOWED_ORIGINS.split(',').map(&:strip)
+    resource '*',
+      headers: :any,
+      methods: [:get, :post, :options],
+      credentials: true
+  end
 end
 
 get "/api/token" do
